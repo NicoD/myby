@@ -10,6 +10,6 @@ RUN php -r "readfile('https://getcomposer.org/installer');" | php -- --install-d
 
 
 RUN apk add --no-cache $PHPIZE_DEPS \
-    && pecl install xdebug-2.6.0 \
+    && pecl install xdebug-2.7.1 \
     && docker-php-ext-enable xdebug
 
