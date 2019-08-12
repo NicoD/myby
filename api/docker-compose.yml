@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+
+    php: &php
+        container_name: myby_test
+        build: Docker/php
+        volumes:
+                - .:/var/www
+        working_dir: /var/www
+        ports:
+            - 8000:8000
+        network_mode: host
+        
+    php-cs-fixer:
+        <<: *php
+        entrypoint: ['php', 'vendor/bin/php-cs-fixer', 'fix']
+
+    phpunit:
+        <<: *php
+        entrypoint: ['php', 'vendor/bin/simple-phpunit']
+
