@@ -1,5 +1,17 @@
 api_platform:
+    title: myby
+    version: '0.0.1'
+
+    formats:
+        jsonld:   ['application/ld+json']
+        html:     ['text/html']
+
     mapping:
         paths:
+            - '%kernel.project_dir%/config/api_platform'
             - '%kernel.project_dir%/src/Entity'
-            - '%kernel.project_dir%/src/DTO'
+    swagger:
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header

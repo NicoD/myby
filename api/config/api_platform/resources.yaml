@@ -1,0 +1,9 @@
+resources:
+    App\Entity\User:
+        collectionOperations:
+            get:
+                access_control: 'is_granted("ROLE_ADMIN")'
+            post: ~
+        itemOperations:
+            get:
+              access_control: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object == user)'
