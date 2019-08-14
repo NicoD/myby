@@ -1,26 +1,44 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import parseHydraDocumentation from '@api-platform/api-doc-parser/lib/hydra/parseHydraDocumentation';
+import { HydraAdmin, hydraClient, fetchHydra as baseFetchHydra } from '@api-platform/admin';
+import authProvider from './authProvider';
+import { Route, Redirect } from 'react-router-dom';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const entrypoint = 'http://127.0.0.1:8000'; // Change this by your own entrypoint if you're not using API Platform distribution
+const fetchHeaders = {'Authorization': `Bearer ${localStorage.getItem('token')}`};
+const fetchHydra = (url, options = {}) => baseFetchHydra(url, {
+    ...options,
+    headers: new Headers(fetchHeaders),
+});
+const dataProvider = api => hydraClient(api, fetchHydra);
+
+const apiDocumentationParser = entrypoint =>
+  parseHydraDocumentation(entrypoint, {
+    headers: new Headers(fetchHeaders),
+  }).then(
+    ({ api }) => ({ api }),
+    result => {
+      const { api, status } = result;
+
+      if (status === 401) {
+        return Promise.resolve({
+          api,
+          status,
+          customRoutes: [
+            <Route path="/" render={() => <Redirect to="/login" />} />,
+          ],
+        });
+      }
+
+      return Promise.reject(result);
+    }
   );
-}
 
-export default App;
+export default () => (
+    <HydraAdmin
+        apiDocumentationParser={apiDocumentationParser}
+        authProvider={authProvider}
+        entrypoint={entrypoint}
+        dataProvider={dataProvider}
+    />
+);
