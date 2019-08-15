@@ -1,5 +1,10 @@
 resources:
     App\Entity\User:
+        attributes:
+            normalization_context:
+                groups: ['read']
+            denormalization_context:
+                groups: ['write']
         collectionOperations:
             get:
                 access_control: 'is_granted("ROLE_ADMIN")'
