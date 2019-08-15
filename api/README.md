@@ -25,6 +25,7 @@
 ### tests
 
 ```
+# docker-compose run php bin/console hautelook:fixtures:load
 # docker-compose run --rm phpunit
 
 ```
