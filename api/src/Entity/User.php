@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\DTO\Role;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -71,6 +72,16 @@ class User implements UserInterface
     public function getUsername(): string
     {
         return (string) $this->email;
+    }
+
+    /**
+     * @return Role[]
+     */
+    public function getRoleObjects(): array
+    {
+        return array_map(function (string $role): Role {
+            return new Role($role);
+        }, $this->getRoles());
     }
 
     /**

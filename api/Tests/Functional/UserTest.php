@@ -43,7 +43,8 @@ class UserTest extends WebTestCase
         $this->assertSame('User', $json['@type']);
         $this->assertInternalType('integer', $json['id']);
         $this->assertSame('admin@example.com', $json['email']);
-        $this->assertSame(['ROLE_USER', 'ROLE_ADMIN'], $json['roles']);
+        $this->assertSame('/roles/ROLE_USER', $json['roleObjects'][0]['@id']);
+        $this->assertSame('/roles/ROLE_ADMIN', $json['roleObjects'][1]['@id']);
     }
 
     /**
