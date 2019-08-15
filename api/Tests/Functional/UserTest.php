@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests;
+namespace App\Tests\Functional;
 
 use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class ApiTest extends WebTestCase
 {
@@ -22,7 +20,7 @@ class ApiTest extends WebTestCase
 
     public function testRetrieveUserList(): void
     {
-        $response = $this->request('GET', '/users');
+        $response = $this->client->request('GET', '/users');
         $json = json_decode($response->getContent(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -37,7 +35,7 @@ class ApiTest extends WebTestCase
 
     public function testRetrieveUser(): void
     {
-        $response = $this->request('GET', $this->findOneIriBy(User::class, ['email' => 'admin@example.com']));
+        $response = $this->client->request('GET', $this->findOneIriBy(User::class, ['email' => 'admin@example.com']));
         $json = json_decode($response->getContent(), true);
 
         $this->assertEquals(200, $response->getStatusCode());
@@ -49,58 +47,14 @@ class ApiTest extends WebTestCase
         $this->assertSame(['ROLE_USER', 'ROLE_ADMIN'], $json['roles']);
     }
 
+    /**
+     * @throws \Exception
+     */
     protected function setUp()
     {
         parent::setUp();
 
-        $this->client = static::createClient();
-
-        $this->client->request(
-            'POST',
-            '/login',
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            \json_encode(['username' => 'admin@example.com', 'password' => 'test']),
-        );
-
-        $response = $this->client->getResponse();
-
-        if (null === ($jsonResponse = \json_decode($response->getContent(), true))) {
-            return;
-        }
-        $this->token = $jsonResponse['token'] ?? null;
-    }
-
-    /**
-     * @param string $method
-     * @param string $uri
-     * @param null   $content
-     * @param array  $headers
-     *
-     * @return Response
-     */
-    protected function request(string $method, string $uri, $content = null, array $headers = []): Response
-    {
-        $server = ['CONTENT_TYPE' => 'application/ld+json', 'HTTP_ACCEPT' => 'application/ld+json'];
-        foreach ($headers as $key => $value) {
-            if ('content-type' === strtolower($key)) {
-                $server['CONTENT_TYPE'] = $value;
-
-                continue;
-            }
-
-            $server['HTTP_'.strtoupper(str_replace('-', '_', $key))] = $value;
-        }
-        $server['HTTP_AUTHORIZATION'] = sprintf('Bearer %s', $this->token);
-
-        if (is_array($content) && false !== preg_match('#^application/(?:.+\+)?json$#', $server['CONTENT_TYPE'])) {
-            $content = json_encode($content);
-        }
-
-        $this->client->request($method, $uri, [], [], $server, $content);
-
-        return $this->client->getResponse();
+        $this->client = Client::create(static::createClient(), 'admin@example.com', 'test');
     }
 
     /**
@@ -109,7 +63,7 @@ class ApiTest extends WebTestCase
      *
      * @return string
      */
-    protected function findOneIriBy(string $resourceClass, array $criteria): string
+    private function findOneIriBy(string $resourceClass, array $criteria): string
     {
         $resource = static::$container->get('doctrine')->getRepository($resourceClass)->findOneBy($criteria);
 
