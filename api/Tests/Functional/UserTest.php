@@ -8,23 +8,23 @@ use App\Entity\User;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class ApiTest extends WebTestCase
+class UserTest extends WebTestCase
 {
+    use BaseTrait;
     use RefreshDatabaseTrait;
 
     /** @var Client */
-    protected $client;
+    private $client;
 
     /** @var string|null */
-    protected $token;
+    private $token;
 
     public function testRetrieveUserList(): void
     {
         $response = $this->client->request('GET', '/users');
         $json = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
+        $this->assertResponseValid($response);
 
         $this->assertArrayHasKey('hydra:totalItems', $json);
         $this->assertEquals(11, $json['hydra:totalItems']);
@@ -38,8 +38,7 @@ class ApiTest extends WebTestCase
         $response = $this->client->request('GET', $this->findOneIriBy(User::class, ['email' => 'admin@example.com']));
         $json = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertEquals('application/ld+json; charset=utf-8', $response->headers->get('Content-Type'));
+        $this->assertResponseValid($response);
 
         $this->assertSame('User', $json['@type']);
         $this->assertInternalType('integer', $json['id']);
