@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+
+    node_front:
+        container_name: myby_front_test
+        build: Docker/node
+        volumes:
+                - .:/app
+        working_dir: /app
+        network_mode: host
+        environment:
+          - PORT=3001
