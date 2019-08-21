@@ -14,7 +14,8 @@ const server = {
    * @param  {string} username The username of the user
    * @param  {string} password The password of the user
    */
-  login(username, password) { // eslint-disable-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
+  login(username, password) {
     return new Promise(resolve => {
       resolve({
         authenticated: true,

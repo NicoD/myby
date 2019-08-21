@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 export function PrivateRoute({ component: Component, loggedIn, ...rest }) {
   return (
@@ -13,7 +14,7 @@ export function PrivateRoute({ component: Component, loggedIn, ...rest }) {
           <Redirect
             to={{
               pathname: '/login',
-              state: { from: props.location }
+              state: { from: props.location },
             }}
           />
         )
@@ -22,6 +23,11 @@ export function PrivateRoute({ component: Component, loggedIn, ...rest }) {
   );
 }
 
+PrivateRoute.propTypes = {
+  component: PropTypes.func,
+  loggedIn: PropTypes.bool,
+  location: PropTypes.object,
+};
 
 function mapStateToProps(state) {
   return { loggedIn: state.global.loggedIn };

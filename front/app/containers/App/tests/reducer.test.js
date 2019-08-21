@@ -14,6 +14,10 @@ describe('appReducer', () => {
       userData: {
         repositories: false,
       },
+      loggedIn: false,
+      username: '',
+      password: '',
+      loginError: '',
     };
   });
 

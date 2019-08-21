@@ -17,15 +17,19 @@
 ### ci
 
 ```
+# docker-compose run --rm node_front yarn lint
 ```
 
 ### tests
 
 ```
+# docker-compose run --rm node_front yarn test
+# docker-compose run --rm node_front yarn test:watch
 
 ```
 
 ### misc
 
 ```
+docker-compose run --rm node_front yarn generate
 ```

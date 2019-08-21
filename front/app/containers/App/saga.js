@@ -78,7 +78,6 @@ export function* loginFlow() {
       logout: take(LOGOUT),
     });
 
-
     // If `authorize` was the winner...
     if (winner.auth) {
       // ...we send Redux appropiate actions
