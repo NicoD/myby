@@ -8,7 +8,18 @@
  */
 
 import produce from 'immer';
-import { LOAD_REPOS_SUCCESS, LOAD_REPOS, LOAD_REPOS_ERROR } from './constants';
+import auth from '../../utils/auth';
+import {
+  LOAD_REPOS_SUCCESS,
+  LOAD_REPOS,
+  LOAD_REPOS_ERROR,
+  CHANGE_USERNAME,
+  CHANGE_PASSWORD,
+  SET_AUTH,
+  SENDING_REQUEST,
+  REQUEST_ERROR,
+  CLEAR_ERROR,
+} from './constants';
 
 // The initial state of the App
 export const initialState = {
@@ -18,12 +29,40 @@ export const initialState = {
   userData: {
     repositories: false,
   },
+  loggedIn: auth.loggedIn(),
+  username: '',
+  password: '',
+  loginError: '',
 };
 
 /* eslint-disable default-case, no-param-reassign */
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case CHANGE_USERNAME:
+        draft.username = action.username;
+        break;
+
+      case CHANGE_PASSWORD:
+        draft.password = action.password;
+        break;
+
+      case SET_AUTH:
+        draft.loggedIn = action.newAuthState;
+        break;
+
+      case SENDING_REQUEST:
+        draft.currentlySending = action.sending;
+        break;
+
+      case REQUEST_ERROR:
+        draft.loginError = action.error;
+        break;
+
+      case CLEAR_ERROR:
+        draft.loginError = '';
+        break;
+
       case LOAD_REPOS:
         draft.loading = true;
         draft.error = false;

@@ -1,7 +1,3 @@
-/**
- * The global state selectors
- */
-
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 
@@ -39,6 +35,24 @@ const makeSelectLocation = () =>
     routerState => routerState.location,
   );
 
+const makeSelectUsername = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.username,
+  );
+
+const makeSelectPassword = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.password,
+  );
+
+const makeLoginError = () =>
+  createSelector(
+    selectGlobal,
+    globalState => globalState.loginError,
+  );
+
 export {
   selectGlobal,
   makeSelectCurrentUser,
@@ -46,4 +60,7 @@ export {
   makeSelectError,
   makeSelectRepos,
   makeSelectLocation,
+  makeSelectUsername,
+  makeSelectPassword,
+  makeLoginError,
 };
