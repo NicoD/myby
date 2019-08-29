@@ -1,8 +1,8 @@
 App\Entity\User:
     attributes:
-        id:
-            groups: ['read']
         email:
-            groups: ['read', 'write']
+            groups: ['read_user', 'write_user']
         roleObjects:
-            groups: ['read', 'write']
+            groups: ['read_user', 'write_user']
+        userProfile:
+            groups: ['read_user']

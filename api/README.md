@@ -33,6 +33,7 @@
 ### misc
 
 ```
-# docker-compose run --rm php  bin/console security:encode-password
+# docker-compose run --rm php bin/console make:entity --api-resource
+# docker-compose run --rm php bin/console security:encode-password
 # curl -X POST -H "Content-Type: application/json" http://localhost:8000/login -d '{"username":"test@example.com","password":"test"}'
 ```

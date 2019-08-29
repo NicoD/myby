@@ -1,0 +1,7 @@
+App\Entity\UserProfile:
+    profile_admin:
+        user: '@admin'
+        baseDistanceMeters: 2200
+    profile_user_{1..10}:
+        user: '@user_<current()>'
+        baseDistanceMeters: <numberBetween(0, 1000)>

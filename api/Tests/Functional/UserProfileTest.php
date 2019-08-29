@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Tests\Functional;
 
 use App\Entity\User;
+use App\Entity\UserProfile;
 use Hautelook\AliceBundle\PhpUnit\RefreshDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserTest extends WebTestCase
+class UserProfileTest extends WebTestCase
 {
     use BaseTrait;
     use RefreshDatabaseTrait;
@@ -19,12 +20,13 @@ class UserTest extends WebTestCase
     /** @var string|null */
     private $token;
 
-    public function testRetrieveUserList(): void
+    public function testRetrieveUserProfileList(): void
     {
-        $response = $this->client->request('GET', '/users');
-        $json = json_decode($response->getContent(), true);
+        $response = $this->client->request('GET', '/user_profiles');
 
         $this->assertResponseValid($response);
+
+        $json = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('hydra:totalItems', $json);
         $this->assertEquals(11, $json['hydra:totalItems']);
@@ -33,19 +35,19 @@ class UserTest extends WebTestCase
         $this->assertCount(11, $json['hydra:member']);
     }
 
-    public function testRetrieveUser(): void
+    public function testRetrieveUserProfile(): void
     {
-        $response = $this->client->request('GET', $this->findOneIriBy(User::class, ['email' => 'admin@example.com']));
+        $user = static::$container->get('doctrine')->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
+        $response = $this->client->request(
+            'GET',
+            $this->findOneIriBy(UserProfile::class, ['user' => $user])
+        );
 
         $this->assertResponseValid($response);
-
         $json = json_decode($response->getContent(), true);
 
-        $this->assertSame('User', $json['@type']);
-        $this->assertSame('admin@example.com', $json['email']);
-        $this->assertSame('/roles/ROLE_USER', $json['roleObjects'][0]['@id']);
-        $this->assertSame('/roles/ROLE_ADMIN', $json['roleObjects'][1]['@id']);
-        $this->assertRegExp('#^/user_profiles/\d+$#', $json['userProfile']);
+        $this->assertSame('UserProfile', $json['@type']);
+        $this->assertSame(2200, $json['baseDistanceMeters']);
     }
 
     /**

@@ -1,4 +1,4 @@
 App\DTO\Role:
     attributes:
         name:
-            groups: ['read']
+            groups: ['read_user']

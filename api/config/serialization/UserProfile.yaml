@@ -1,0 +1,4 @@
+App\Entity\UserProfile:
+    attributes:
+        baseDistanceMeters:
+            groups: ['read_user_profile', 'write_user_profile']

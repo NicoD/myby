@@ -2,15 +2,32 @@ resources:
     App\Entity\User:
         attributes:
             normalization_context:
-                groups: ['read']
+                groups: ['read_user']
             denormalization_context:
-                groups: ['write']
+                groups: ['write_user']
+        collectionOperations:
+            get:
+                access_control: 'is_granted("ROLE_ADMIN")'
+            post:
+                access_control: 'is_granted("ROLE_ADMIN")'
+        itemOperations:
+            get:
+              access_control: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object == user)'
+
+    App\Entity\UserProfile:
+        attributes:
+            normalization_context:
+                groups: ['read_user_profile']
+            denormalization_context:
+                groups: ['write_user_profile']
         collectionOperations:
             get:
                 access_control: 'is_granted("ROLE_ADMIN")'
         itemOperations:
             get:
-              access_control: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object == user)'
+                access_control: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object.user == user)'
+            put:
+                access_control: 'is_granted("ROLE_ADMIN") or (is_granted("ROLE_USER") and object.user == user)'
 
     App\DTO\Role:
         properties:
