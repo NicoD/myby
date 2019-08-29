@@ -1,25 +1,19 @@
-import React, { cloneElement } from 'react';
-import { List, Datagrid, TextField, EmailField, ArrayField, SingleFieldList, ChipField } from 'react-admin';
-
-export const StringToLabelObject = ({ record, children, ...rest }) =>
-    cloneElement(children, {
-        record: { label: record },
-        ...rest
-    }
-)
+import React from 'react';
+import { List, Datagrid, TextField, EmailField, ReferenceArrayField, SingleFieldList, ChipField, ReferenceField } from 'react-admin';
 
 export const UserList = (props) => (
-    <List {...props} title="Users"  perPage={ 2 }>
+    <List {...props} title="Users"  perPage={ 10 }>
         <Datagrid>
-            <TextField source="originId" label="ID"/>
+            <TextField source="id" label="ID"/>
             <EmailField source="email" label="Email" />
-            <ArrayField source="roleObjects" label="Role">
+            <ReferenceArrayField label="Role" source="roleObjects" reference="roles" linkType="show">
                 <SingleFieldList>
-                    <StringToLabelObject>
-                        <ChipField source="label"/>
-                    </StringToLabelObject>
+                    <ChipField source="@id" />
                 </SingleFieldList>
-            </ArrayField>
+            </ReferenceArrayField>
+            <ReferenceField label="UserProfile" source="userProfile" reference="user_profiles" linkType="show">
+                <TextField source="@id" />
+            </ReferenceField>
         </Datagrid>
     </List>
 );

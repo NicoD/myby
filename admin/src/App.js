@@ -6,6 +6,9 @@ import authProvider from './authProvider';
 import { Redirect } from 'react-router-dom';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { UserList } from './Components/User/List';
+import { RoleShow } from './Components/Role/Show';
+import { RoleList } from './Components/Role/List';
+import { UserProfileShow } from './Components/UserProfile/Show';
 
 const theme = createMuiTheme({
     palette: {
@@ -62,7 +65,9 @@ export default class extends Component {
                    theme={ theme }
                    authProvider={ authProvider }
             >
+                <Resource name="roles" list={ RoleList } show={ RoleShow } title="Roles"/>
                 <Resource name="users" list={ UserList } title="Users"/>
+                <Resource name="user_profiles" show={ UserProfileShow } title="UserProfiles"/>
             </Admin>
         )
     }
