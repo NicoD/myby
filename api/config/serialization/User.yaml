@@ -2,7 +2,7 @@ App\Entity\User:
     attributes:
         email:
             groups: ['read_user', 'write_user']
-        roleObjects:
+        roles:
             groups: ['read_user', 'write_user']
         userProfile:
             groups: ['read_user']

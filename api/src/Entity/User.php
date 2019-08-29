@@ -80,16 +80,6 @@ class User implements UserInterface
     }
 
     /**
-     * @return Role[]
-     */
-    public function getRoleObjects(): array
-    {
-        return array_map(function (string $role): Role {
-            return new Role($role);
-        }, $this->getRoles());
-    }
-
-    /**
      * @see UserInterface
      */
     public function getRoles(): array

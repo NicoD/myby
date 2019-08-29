@@ -43,8 +43,7 @@ class UserTest extends WebTestCase
 
         $this->assertSame('User', $json['@type']);
         $this->assertSame('admin@example.com', $json['email']);
-        $this->assertSame('/roles/ROLE_USER', $json['roleObjects'][0]['@id']);
-        $this->assertSame('/roles/ROLE_ADMIN', $json['roleObjects'][1]['@id']);
+        $this->assertEquals(['ROLE_USER', 'ROLE_ADMIN'], $json['roles']);
         $this->assertRegExp('#^/user_profiles/\d+$#', $json['userProfile']);
     }
 

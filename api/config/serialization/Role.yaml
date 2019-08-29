@@ -1,4 +1,0 @@
-App\DTO\Role:
-    attributes:
-        name:
-            groups: ['read_user']
